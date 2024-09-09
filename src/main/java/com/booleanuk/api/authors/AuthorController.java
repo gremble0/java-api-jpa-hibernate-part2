@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,7 +53,7 @@ public class AuthorController {
   public ResponseEntity<Author> put(@PathVariable int id, @RequestBody Author author) {
     Optional<Author> maybeAuthorToUpdate = this.repository.findById(id);
     if (maybeAuthorToUpdate.isEmpty())
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No author with id '" + id + "' exists");
 
     Author authorToUpdate = maybeAuthorToUpdate.get();
     authorToUpdate.setFirstName(author.getFirstName());
@@ -62,5 +63,15 @@ public class AuthorController {
 
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(this.repository.save(authorToUpdate));
+  }
+
+  @DeleteMapping(value = "{id}")
+  public ResponseEntity<Author> delete(@PathVariable int id) {
+    Optional<Author> maybeAuthorToDelete = this.repository.findById(id);
+    if (maybeAuthorToDelete.isEmpty())
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No author with id '" + id + "' exists");
+
+    this.repository.deleteById(id);
+    return ResponseEntity.ok(maybeAuthorToDelete.get());
   }
 }
