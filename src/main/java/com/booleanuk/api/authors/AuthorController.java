@@ -35,7 +35,10 @@ public class AuthorController {
 
   @GetMapping
   public ResponseEntity<List<Author>> get() {
-    return ResponseEntity.ok(this.repository.findAll());
+    return ResponseEntity.ok(
+        this.repository.findAll().stream()
+            .sorted((author1, author2) -> author1.getId() - author2.getId())
+            .toList());
   }
 
   @GetMapping(value = "{id}")
