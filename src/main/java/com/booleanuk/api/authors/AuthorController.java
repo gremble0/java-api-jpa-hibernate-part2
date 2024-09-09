@@ -50,7 +50,7 @@ public class AuthorController {
   }
 
   @PutMapping(value = "{id}")
-  public ResponseEntity<Author> put(@PathVariable int id, @RequestBody Author author) {
+  public ResponseEntity<Author> put(@PathVariable int id, @RequestBody Author author) throws ResponseStatusException {
     Optional<Author> maybeAuthorToUpdate = this.repository.findById(id);
     if (maybeAuthorToUpdate.isEmpty())
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No author with id '" + id + "' exists");
@@ -66,7 +66,7 @@ public class AuthorController {
   }
 
   @DeleteMapping(value = "{id}")
-  public ResponseEntity<Author> delete(@PathVariable int id) {
+  public ResponseEntity<Author> delete(@PathVariable int id) throws ResponseStatusException {
     Optional<Author> maybeAuthorToDelete = this.repository.findById(id);
     if (maybeAuthorToDelete.isEmpty())
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No author with id '" + id + "' exists");
