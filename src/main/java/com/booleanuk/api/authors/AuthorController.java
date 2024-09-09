@@ -28,7 +28,7 @@ public class AuthorController {
   @PostMapping
   public ResponseEntity<Author> post(@RequestBody Author author) throws ResponseStatusException {
     try {
-      return ResponseEntity.status(HttpStatus.CREATED).body(author);
+      return ResponseEntity.status(HttpStatus.CREATED).body(this.repository.save(author));
     } catch (DataIntegrityViolationException e) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not create author");
     }
