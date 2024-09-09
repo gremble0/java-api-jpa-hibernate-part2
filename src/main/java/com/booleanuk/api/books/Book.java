@@ -1,5 +1,6 @@
 package com.booleanuk.api.books;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.booleanuk.api.authors.Author;
 import com.booleanuk.api.publishers.Publisher;
@@ -38,11 +39,11 @@ public class Book {
 
   @ManyToOne
   @JoinColumn(name = "author_id")
-  @JsonProperty(required = true)
+  @JsonBackReference
   private Author authorId;
 
   @ManyToOne
   @JoinColumn(name = "publisher_id")
-  @JsonProperty(required = true)
+  @JsonBackReference
   private Publisher publisherId;
 }
