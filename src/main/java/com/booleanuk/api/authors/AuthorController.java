@@ -1,5 +1,10 @@
 package com.booleanuk.api.authors;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +20,12 @@ public class AuthorController {
   }
 
   @PostMapping
-  public Author post(@RequestBody Author author) {
-    return this.repository.save(author);
+  public ResponseEntity<Author> post(@RequestBody Author author) {
+    return new ResponseEntity<>(this.repository.save(author), HttpStatus.CREATED);
+  }
+
+  @GetMapping
+  public ResponseEntity<List<Author>> get() {
+    return new ResponseEntity<>(this.repository.findAll(), HttpStatus.OK);
   }
 }
