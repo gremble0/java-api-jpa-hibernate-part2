@@ -1,6 +1,7 @@
 package com.booleanuk.api.authors;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +27,7 @@ public class AuthorController {
   @PostMapping
   public ResponseEntity<Author> post(@RequestBody Author author) throws ResponseStatusException {
     try {
-      return new ResponseEntity<>(this.repository.save(author), HttpStatus.CREATED);
+      return ResponseEntity.status(HttpStatus.CREATED).body(author);
     } catch (DataIntegrityViolationException e) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not create author");
     }
@@ -33,11 +35,29 @@ public class AuthorController {
 
   @GetMapping
   public ResponseEntity<List<Author>> get() {
-    return new ResponseEntity<>(this.repository.findAll(), HttpStatus.OK);
+    return ResponseEntity.ok(this.repository.findAll());
   }
 
   @GetMapping(value = "{id}")
-  public ResponseEntity<Author> get(@PathVariable int id) {
-    return null;
+  public ResponseEntity<Author> get(@PathVariable int id) throws ResponseStatusException {
+    return this.repository.findById(id)
+        .map(ResponseEntity::ok)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No author with id '" + id + "' exists"));
+  }
+
+  @PutMapping(value = "{id}")
+  public ResponseEntity<Author> put(@PathVariable int id, @RequestBody Author author) {
+    Optional<Author> maybeAuthorToUpdate = this.repository.findById(id);
+    if (maybeAuthorToUpdate.isEmpty())
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+    Author authorToUpdate = maybeAuthorToUpdate.get();
+    authorToUpdate.setFirstName(author.getFirstName());
+    authorToUpdate.setLastName(author.getLastName());
+    authorToUpdate.setEmail(author.getEmail());
+    authorToUpdate.setAlive(author.getAlive());
+
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(this.repository.save(authorToUpdate));
   }
 }
