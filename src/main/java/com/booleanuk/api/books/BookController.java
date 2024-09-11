@@ -56,8 +56,8 @@ public class BookController {
     Book bookToUpdate = maybeBookToUpdate.get();
     bookToUpdate.setTitle(book.getTitle());
     bookToUpdate.setGenre(book.getGenre());
-    bookToUpdate.setAuthor(book.getAuthor());
-    bookToUpdate.setPublisher(book.getPublisher());
+    bookToUpdate.setAuthorId(book.getAuthorId());
+    bookToUpdate.setPublisherId(book.getPublisherId());
 
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(this.repository.save(bookToUpdate));
