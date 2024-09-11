@@ -2,18 +2,12 @@ package com.booleanuk.api.authors;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.booleanuk.api.books.Book;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,24 +28,19 @@ public class Author {
   private int id;
 
   @Column(nullable = false)
-  @JsonProperty(required = true)
   private String firstName;
 
   @Column(nullable = false)
-  @JsonProperty(required = true)
   private String lastName;
 
   @Column(nullable = false)
   @Email
-  @JsonProperty(required = true)
   private String email;
 
   @Column(nullable = false)
-  @JsonProperty(required = true)
   private Boolean alive;
 
-  @OneToMany
-  @JoinColumn(name = "author_id")
-  @JsonManagedReference
+  @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonIgnoreProperties("author")
   private List<Book> books;
 }

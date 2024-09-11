@@ -1,7 +1,6 @@
 package com.booleanuk.api.books;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.booleanuk.api.authors.Author;
 import com.booleanuk.api.publishers.Publisher;
 
@@ -30,20 +29,17 @@ public class Book {
   private int id;
 
   @Column(nullable = false)
-  @JsonProperty(required = true)
   private String title;
 
   @Column(nullable = false)
-  @JsonProperty(required = true)
   private String genre;
 
   @ManyToOne
-  @JoinColumn(name = "author_id")
-  @JsonBackReference
-  private Author authorId;
+  @JsonIncludeProperties(value = {"id", "first_name", "last_name", "email", "alive"})
+  @JoinColumn(name = "author_id", nullable = false)
+  private Author author;
 
-  @ManyToOne
-  @JoinColumn(name = "publisher_id")
-  @JsonBackReference
-  private Publisher publisherId;
+  @JsonIncludeProperties(value = {"id", "name", "location"})
+  @JoinColumn(name = "publisher_id", nullable = false)
+  private Publisher publisher;
 }

@@ -2,18 +2,10 @@ package com.booleanuk.api.publishers;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.booleanuk.api.books.Book;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,15 +23,12 @@ public class Publisher {
   private int id;
 
   @Column(nullable = false)
-  @JsonProperty(required = true)
   private String name;
 
   @Column(nullable = false)
-  @JsonProperty(required = true)
   private String location;
 
-  @OneToMany
-  @JoinColumn(name = "publisher_id")
-  @JsonManagedReference
+  @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonIgnoreProperties("publisher")
   private List<Book> books;
 }
