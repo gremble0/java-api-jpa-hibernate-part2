@@ -30,7 +30,7 @@ public class BookController {
     try {
       return ResponseEntity.status(HttpStatus.CREATED).body(this.repository.save(book));
     } catch (DataIntegrityViolationException e) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not create book");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not create book " + e.getMessage());
     }
   }
 

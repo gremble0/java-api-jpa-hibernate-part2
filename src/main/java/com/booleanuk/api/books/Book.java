@@ -36,10 +36,11 @@ public class Book {
 
   @ManyToOne
   @JsonIncludeProperties(value = {"id", "first_name", "last_name", "email", "alive"})
-  @JoinColumn(name = "author_id", nullable = false)
+  @JoinColumn(name = "author_id")
   private Author author;
 
+  @ManyToOne
   @JsonIncludeProperties(value = {"id", "name", "location"})
-  @JoinColumn(name = "publisher_id", nullable = false)
+  @JoinColumn(name = "publisher_id")
   private Publisher publisher;
 }

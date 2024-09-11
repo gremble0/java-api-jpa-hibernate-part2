@@ -1,5 +1,6 @@
 package com.booleanuk.api.authors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -41,6 +42,5 @@ public class Author {
   private Boolean alive;
 
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-  @JsonIgnoreProperties("author")
-  private List<Book> books;
+  private List<Book> books = new ArrayList<>();
 }
